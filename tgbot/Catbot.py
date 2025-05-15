@@ -22,7 +22,7 @@ photo_paths = [
 
 # Обработчик команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Привет! Я твой первый Telegram-бот. Отправь /photo, чтобы получить фотографию.')
+    await update.message.reply_text('Отправь /photo, чтобы получить фотографию.')
 
 # Обработчик команды /photo
 async def send_random_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
