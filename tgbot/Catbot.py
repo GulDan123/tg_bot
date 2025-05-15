@@ -1,33 +1,27 @@
+import os
 import random
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-# Ваш токен бота
 TOKEN = '7993126919:AAHGV2Px8RinjQ2EM44__cCbq7ofCNt_KgY'
 
-# Список картинок, которые бот может отправлять
-photo_paths = [
-    r'd:\tgbot\photo.jpg',
-    r'd:\tgbot\photo1.jpg',
-    r'd:\tgbot\photo2.jpg',
-    r'd:\tgbot\photo3.jpg',
-    r'd:\tgbot\photo4.jpg',
-    r'd:\tgbot\photo5.jpg',
-    r'd:\tgbot\photo6.jpg',
-    r'd:\tgbot\photo7.jpg',
-    r'd:\tgbot\photo8.jpg',
-    r'd:\tgbot\photo9.jpg'
-]
+if os.name == 'nt':  # Windows
+    photos_dir = r'd:\tgbot'
+else:  # Linux
+    photos_dir = '/home/user/photos'
 
-
-# Обработчик команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text('Отправь /photo, чтобы получить фотографию.')
 
-# Обработчик команды /photo
 async def send_random_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    selected_photo = random.choice(photo_paths)  # используем photo_paths
-    with open(selected_photo, 'rb') as photo_file:
+    # Получаем все файлы в папке
+    files = [f for f in os.listdir(photos_dir) if os.path.isfile(os.path.join(photos_dir, f))]
+    if not files:
+        await update.message.reply_text("Нет доступных фотографий.")
+        return
+    selected_file = random.choice(files)
+    photo_path = os.path.join(photos_dir, selected_file)
+    with open(photo_path, 'rb') as photo_file:
         await update.message.reply_photo(photo=photo_file, caption='Вот пример красивой картинки для рабочего стола!')
 
 if __name__ == '__main__':
